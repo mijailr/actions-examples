@@ -20,6 +20,7 @@ jobs:
       - name: Set SAMPLE
         id: sample
         run: |
+          echo "CLUSTER_PATH=./account" >> $GITHUB_ENV
           echo "sample=FROM OUTPUTS" >> $GITHUB_OUTPUT
       - name: Get from inner action
         uses: ./.github/actions/with-secrets
@@ -27,12 +28,13 @@ jobs:
           name: Mijail
       - name: Change file
         run: |
-          echo "$SAMPLE" >> ./account/changes
+          echo "$SAMPLE" >> ./$CLUSTER_PATH/changes
       - name: Commit and push
         shell: bash
-        working-directory: ./account
+        working-directory: ./${{ env.CLUSTER_PATH }}
         run: |
           git config --global user.name "Github Actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "chore: changed from gitops"
           git push
