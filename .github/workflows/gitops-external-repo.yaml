@@ -21,9 +21,9 @@ jobs:
         id: sample
         run: |
           echo "sample=FROM OUTPUTS" >> $GITHUB_OUTPUT
+      - name: Get from inner action
+        uses: ./.github/actions/with-secrets
       - name: Change file
-        env:
-          SAMPLE: ${{steps.sample.outputs.sample}}
         run: |
           echo "$SAMPLE" >> ./account/changes
       - name: Commit and push
