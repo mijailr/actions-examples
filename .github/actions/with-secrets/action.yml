@@ -1,0 +1,20 @@
+---
+name: Sample Action
+description: Sets an environment variable
+inputs:
+  sample:
+    description: sample key
+runs:
+  using: composite
+  steps:
+  - name: Set default variables
+    shell: bash
+    env:
+      INPUT: ${{ inputs.sample }}
+      DEFAULT: ${{ secrets.SAMPLE }}
+    run: |
+      $GITHUB_ACTION_PATH/set-env.sh SAMPLE $DEFAULT $INPUT
+  - name: check variables
+    shell: bash
+    run: |
+      echo $SAMPLE

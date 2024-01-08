@@ -1,0 +1,37 @@
+name: GitOPS Action
+on:
+  push:
+    branches:
+      - "main"
+jobs:
+  commit-to-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Checkout another repo
+        uses: actions/checkout@v3
+        with:
+          repository: mijailr/account
+          path: account
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+      - name: List files
+        run: ls -la account
+      - name: Set SAMPLE
+        id: sample
+        run: |
+          echo "sample=FROM OUTPUTS" >> $GITHUB_OUTPUT
+      - name: Change file
+        env:
+          SAMPLE: ${{steps.sample.outputs.sample}}
+        run: |
+          echo "$SAMPLE" >> ./account/changes
+      - name: Commit and push
+        shell: bash
+        working-directory: ./account
+        run: |
+          git config --global user.name "Github Actions"
+          git add -A
+          git commit -m "chore: changed from gitops"
+          git push
+          
