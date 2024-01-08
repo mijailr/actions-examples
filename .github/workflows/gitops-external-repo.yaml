@@ -23,6 +23,8 @@ jobs:
           echo "sample=FROM OUTPUTS" >> $GITHUB_OUTPUT
       - name: Get from inner action
         uses: ./.github/actions/with-secrets
+        with:
+          name: Mijail
       - name: Change file
         run: |
           echo "$SAMPLE" >> ./account/changes

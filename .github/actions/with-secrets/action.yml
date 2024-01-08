@@ -1,13 +1,21 @@
 ---
 name: Sample Action
 description: Sets an environment variable
+inputs: 
+  name:
+    description: Name
+    required: true
 runs:
   using: composite
   steps:
+  - name: Set environment variables
+    shell: bash
+    run: |
+      echo "VALUES=${{ inputs.name }}-$(date +%Y/%m/%d)" >> $GITHUB_ENV
   - name: Set default variables
     shell: bash
     run: |
-      echo "SAMPLE=FROM INNER ACTION" >> $GITHUB_ENV
+      echo "SAMPLE=FROM INNER ACTION | $VALUES" >> $GITHUB_ENV
   - name: check variables
     shell: bash
     run: |
