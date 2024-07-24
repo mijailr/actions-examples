@@ -1,0 +1,6 @@
+---
+helm:
+  valuesObject:
+    {{- toYaml .Values.base | nindent 4 }}
+  valuesObjectBootstrap:
+    {{- toYaml .Values.bootstrap| nindent 4 }}

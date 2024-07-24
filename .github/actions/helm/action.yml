@@ -1,0 +1,33 @@
+---
+name: Helm Action
+description: Runs helm template with values
+inputs: 
+  base-values:
+    description: Base values
+    default: |
+      {}
+  bootstrap-values:
+    description: Bootstrap values
+    default: |
+      {}
+runs:
+  using: composite
+  steps:
+    - name: Print values
+      shell: bash
+      run: |
+        echo "VALUES=${{ inputs.values }}"
+    
+    - name: Dump values
+      shell: bash
+      run: |
+        echo "${{ inputs.bootstrap-values }}" > ./values-bootstrap.yaml
+        echo "${{ inputs.base-values }}" > ./values-base.yaml
+        yq ea '{"base": select(fileIndex == 0)} * {"bootstrap": select(fileIndex==1)}'  ./values-base.yaml ./values-bootstrap.yaml > ./values.yaml
+
+    
+    - name: Run helm template
+      shell: bash
+      run: |
+        helm template demo ./chart --values ./values.yaml
+  

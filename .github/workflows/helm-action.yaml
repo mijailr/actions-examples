@@ -1,0 +1,31 @@
+name: helm action
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  helm-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run helm action
+        uses: ./.github/actions/helm
+        with:
+          base-values: |
+            sample: "base"
+            stacked:
+              value: "base"
+              array:
+                - "base"
+                - "base"
+          bootstrap-values: |
+            sample: "bootstrap"
+            stacked:
+              value: "bootstrap"
+              array:
+                - "bootstrap"
+                - "bootstrap"

@@ -2,7 +2,7 @@ name: GitOPS Action
 on:
   push:
     branches:
-      - "main"
+      - "none"
 jobs:
   commit-to-repo:
     runs-on: ubuntu-latest
