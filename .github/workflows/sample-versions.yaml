@@ -8,14 +8,28 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.set_tag.outputs.tag }}
+      publish: ${{ steps.check.outputs.publish_js }}
     steps:
       - name: Set Tag
         id: set_tag
         run: |
           echo "tag=$(echo $GITHUB_REF | sed -n 's/refs\/tags\/v//p')" >> $GITHUB_OUTPUT
+
+      - name: Should release
+        id: check
+        env:
+          TAG: ${{ steps.set_tag.outputs.tag }}
+        run: |
+          if npm view "littlehorse-client@$TAG" version >/dev/null 2>&1; then
+            echo "Version $TAG already exists on npm, skipping publish."
+            echo "publish_js=false" >> $GITHUB_OUTPUT
+          else
+            echo "publish_js=true" >> $GITHUB_OUTPUT
+          fi
   tag:
     needs: prepare
     runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.publish == 'true' }}
     steps:
       - name: Tag lowercase
         env:
